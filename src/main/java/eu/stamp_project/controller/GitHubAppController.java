@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import eu.stamp_project.runner.MavenRunner;
 import eu.stamp_project.service.GitHubService;
@@ -53,11 +56,8 @@ public class GitHubAppController {
 			// [{"id":"40cc77e2a3b315c5fafc90151bdaf08eef9c442c","tree_id":"68f6572a71291bd3e71785d0f226d37f81a6f446","distinct":true,"message":"Update README.md","timestamp":"2018-12-21T15:55:10+01:00","url":"https://github.com/luandrea/dhell/commit/40cc77e2a3b315c5fafc90151bdaf08eef9c442c","author":{"name":"Luca Andreatta","email":"luca.andreatta@gmail.com","username":"luandrea"},"committer":{"name":"GitHub","email":"noreply@github.com","username":"web-flow"},"added":[],"removed":[],"modified":["README.md"]}]
 			// ex.: JSONArray jsonarray = new JSONArray(jsonStr);
 
-			// get body from request
-			String body = getBody(request);
-
-			Gson gson = new Gson();
-			JsonObject jsonObject = gson.fromJson(body, JsonElement.class).getAsJsonObject();
+			// get JSON Object from request
+			JsonObject jsonObject = getJSonObjectFromRequest(request);
 
 			// get repository information
 			String repositoryName = jsonObject.get("repository").getAsJsonObject().get("name").getAsString();
@@ -121,6 +121,27 @@ public class GitHubAppController {
 		// pull request from branch to master
 		githubService.createPullRequest(repositoryName, repositoryOwner, "DSpot Amplify",
 				"Dspot Amplify pull request from commit "+commitId+" on " + branch, branch, "master");
+	}
+
+
+	private static JsonObject getJSonObjectFromRequest(HttpServletRequest request) throws IOException, JSONException {
+		JsonObject jsonObject = null;
+
+		// get body from request
+		String body = getBody(request);
+
+		Gson gson = new Gson();
+		if (body.startsWith("[")) {
+			JsonArray entries = (JsonArray) new JsonParser().parse(body);
+			jsonObject = ((JsonObject)entries.get(0));
+
+//			JSONArray jsonarray = new JSONArray(body);
+//			jsonObject = (JsonObject) jsonarray.get(0);
+		} else {
+			jsonObject = gson.fromJson(body, JsonElement.class).getAsJsonObject();
+		}
+
+		return jsonObject;
 	}
 
 	/**
