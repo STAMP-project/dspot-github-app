@@ -61,7 +61,7 @@ public class JGitService {
 	 */
 	public File cloneRepository(String repositoryURL, File repositoryFolder)
 			throws InvalidRemoteException, TransportException, GitAPIException {
-		log.debug("Cloning repository in " + (repositoryFolder != null ? repositoryFolder.getAbsolutePath() : "null"));
+		log.debug("Cloning repository"+ (repositoryFolder != null ? (" in " + repositoryFolder.getAbsolutePath()) : "..."));
 
 		if (repositoryFolder == null) {
 			repositoryFolder = Files.createTempDir();

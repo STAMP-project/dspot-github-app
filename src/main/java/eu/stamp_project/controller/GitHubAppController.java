@@ -52,20 +52,28 @@ public class GitHubAppController {
 		try {
 			log.debug("'" + eventType + "' Event received");
 
-			// TODO error if push event is like this:
-			// [{"id":"40cc77e2a3b315c5fafc90151bdaf08eef9c442c","tree_id":"68f6572a71291bd3e71785d0f226d37f81a6f446","distinct":true,"message":"Update README.md","timestamp":"2018-12-21T15:55:10+01:00","url":"https://github.com/luandrea/dhell/commit/40cc77e2a3b315c5fafc90151bdaf08eef9c442c","author":{"name":"Luca Andreatta","email":"luca.andreatta@gmail.com","username":"luandrea"},"committer":{"name":"GitHub","email":"noreply@github.com","username":"web-flow"},"added":[],"removed":[],"modified":["README.md"]}]
-			// ex.: JSONArray jsonarray = new JSONArray(jsonStr);
-
 			// get JSON Object from request
 			JsonObject jsonObject = getJSonObjectFromRequest(request);
 
-			// get repository information
-			String repositoryName = jsonObject.get("repository").getAsJsonObject().get("name").getAsString();
-			String repositoryURL = jsonObject.get("repository").getAsJsonObject().get("url").getAsString();
-			String repositoryOwner = jsonObject.get("repository").getAsJsonObject().get("owner").getAsJsonObject().get("name").getAsString();
-
 			// push event
 			if (eventType.equals("push")) {
+
+				// TODO load from configuration
+				String branchToCheck = "jenkins_develop";
+
+				// check branch References
+				String ref = jsonObject.get("ref").getAsString();
+				if (!ref.contains(branchToCheck)) {
+					String message = "Push event received on ref '"+ref+"', only event on branch '"+branchToCheck+"' will be processed";
+					log.info(message);
+					response.put("message", message);
+					return response;
+				}
+
+				// get repository information
+				String repositoryName = jsonObject.get("repository").getAsJsonObject().get("name").getAsString();
+				String repositoryURL = jsonObject.get("repository").getAsJsonObject().get("url").getAsString();
+				String repositoryOwner = jsonObject.get("repository").getAsJsonObject().get("owner").getAsJsonObject().get("name").getAsString();
 
 				// get commit information
 				String branchRef =  jsonObject.get("ref").getAsString();
