@@ -70,7 +70,7 @@ public class GitHubAppController {
 				// get commit information
 				String branchRef =  jsonObject.get("ref").getAsString();
 				String branchEvent =  branchRef.substring(branchRef.lastIndexOf("/")+1);
-				String commitId = jsonObject.get("commits").getAsJsonObject().get("0").getAsJsonObject().get("id").getAsString();
+				String commitId = jsonObject.get("commits").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString();
 
 				handlePipeline(branchEvent, repositoryName, repositoryURL, repositoryOwner, commitId);
 				response.put("message", "Pull request created with amplified tests!");
