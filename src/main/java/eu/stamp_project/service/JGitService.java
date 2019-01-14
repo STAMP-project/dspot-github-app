@@ -37,11 +37,13 @@ public class JGitService {
 	public JGitService(ConfigurationBean configuration) {
 		super();
 
-		log.debug("Connecting to GitHub as: " + configuration.getGithubUsername());
-
 		if (configuration.getGithubUsername() != null && configuration.getGithubPassword() != null) {
+			log.debug("Connecting to GitHub as: " + configuration.getGithubUsername());
 			upCredentialsProvider = new UsernamePasswordCredentialsProvider(configuration.getGithubUsername(),
 					configuration.getGithubPassword());
+
+		} else {
+			log.debug("No user configured to Connect to GitHub.");
 		}
 	}
 
@@ -50,7 +52,8 @@ public class JGitService {
 	}
 
 	/**
-	 * Clone the repository in the folder specified. If the folder is null, it will use a temp folder.
+	 * Clone the repository in the folder specified. If the folder is null, it will
+	 * use a temp folder.
 	 *
 	 * @param repositoryURL
 	 * @param repositoryFolder
@@ -61,7 +64,8 @@ public class JGitService {
 	 */
 	public File cloneRepository(String repositoryURL, File repositoryFolder)
 			throws InvalidRemoteException, TransportException, GitAPIException {
-		log.debug("Cloning repository"+ (repositoryFolder != null ? (" in " + repositoryFolder.getAbsolutePath()) : "..."));
+		log.debug("Cloning repository"
+				+ (repositoryFolder != null ? (" in " + repositoryFolder.getAbsolutePath()) : "..."));
 
 		if (repositoryFolder == null) {
 			repositoryFolder = Files.createTempDir();
@@ -70,7 +74,7 @@ public class JGitService {
 		TransportCommand command = Git.cloneRepository().setURI(repositoryURL).setDirectory(repositoryFolder);
 		gitCommandCall(command);
 
-		log.debug("Repository cloned in "+repositoryFolder.getAbsolutePath());
+		log.debug("Repository cloned in " + repositoryFolder.getAbsolutePath());
 
 		return repositoryFolder;
 	}
@@ -120,7 +124,7 @@ public class JGitService {
 					log.debug("New branch '" + branch + "' created");
 
 				} else {
-					throw new Exception("Branch '"+branch+"' not found!");
+					throw new Exception("Branch '" + branch + "' not found!");
 				}
 
 				return repository;
@@ -261,14 +265,14 @@ public class JGitService {
 
 	private void gitCommandCall(TransportCommand command) throws GitAPIException {
 		// Only used in commands that use a Transport where could be used credentials:
-	    // CloneCommand, FetchCommand, LsRemoteCommand, PullCommand, PushCommand, SubmoduleAddCommand, SubmoduleUpdateCommand
+		// CloneCommand, FetchCommand, LsRemoteCommand, PullCommand, PushCommand,
+		// SubmoduleAddCommand, SubmoduleUpdateCommand
 
 		if (upCredentialsProvider != null) {
 			command.setCredentialsProvider(upCredentialsProvider).call();
 		} else {
 			command.call();
 		}
-
 
 	}
 

@@ -14,7 +14,7 @@ public class ConfigurationBean {
 	private String githubToken;
 
 	private String proxyHost;
-	private int proxyPort;
+	private Integer proxyPort;
 
 	public String getGithubUsername() {
 		return githubUsername;
@@ -48,11 +48,11 @@ public class ConfigurationBean {
 		this.proxyHost = proxyHost;
 	}
 
-	public int getProxyPort() {
+	public Integer getProxyPort() {
 		return proxyPort;
 	}
 
-	public void setProxyPort(int proxyPort) {
+	public void setProxyPort(Integer proxyPort) {
 		this.proxyPort = proxyPort;
 	}
 

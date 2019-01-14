@@ -28,7 +28,7 @@ public class GitHubService {
 		client = new GitHubClient().setCredentials(configuration.getGithubUsername(),
 				configuration.getGithubPassword());
 
-		if (configuration.getProxyHost() != null && configuration.getProxyPort() > 0) {
+		if (configuration.getProxyHost() != null && configuration.getProxyPort() != null) {
 			Proxy proxy = new Proxy(Proxy.Type.HTTP,
 					new InetSocketAddress(configuration.getProxyHost(), configuration.getProxyPort()));
 			client.setProxy(proxy);
