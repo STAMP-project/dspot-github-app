@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +131,7 @@ public class GitHubAppController {
 	}
 
 
-	private static JsonObject getJSonObjectFromRequest(HttpServletRequest request) throws IOException, JSONException {
+	private static JsonObject getJSonObjectFromRequest(HttpServletRequest request) throws IOException {
 		JsonObject jsonObject = null;
 
 		// get body from request
