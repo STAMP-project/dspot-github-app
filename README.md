@@ -16,10 +16,10 @@ There must be these applications installed on the local machine:
 
 ### Installing
 
-To install this application you must get a copy of the prject from GitHub:
+To install this application you must get a copy of the project from GitHub:
 
 ```
-git clone https://github.com/luandrea/dhell.git
+https://github.com/STAMP-project/dspot-github-app
 ```
 
 Then you need to compile it:
